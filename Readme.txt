@@ -11,7 +11,8 @@
 Input.txt can contain multiple lines with inputs such as above 
 Output.txt algorithm outputs all of them with a '\n' between each output for better readability.
 
--> We have used KMP algorithm :
+-> Our algorithm breaks down "-wi" "line is" and "sample.txt" from the input.
+   We have used KMP algorithm :
    Used for finding patterns in a text
 
    Time Complexity is : O(m+n) where m is total length of sample file and n is length of pattern
