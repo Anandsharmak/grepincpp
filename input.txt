@@ -1,0 +1,7 @@
+line sample.txt
+-v line sample.txt
+-i line sample.txt
+-w line sample.txt
+-n line sample.txt
+-iw line sample.txt
+-iv line sample.txt
