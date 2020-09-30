@@ -1,0 +1,3 @@
+Illegal symbol LINE IS
+ -w* LINE IS* sample.txt*
+

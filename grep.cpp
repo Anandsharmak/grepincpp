@@ -15,7 +15,7 @@ bool compare(char,char,bool);
 //Readlines from sample file
 map<int,string> readline(string);
 //Breaks -ivw
-vector<string> breakcommand(string command);
+vector<string> breakcommand(string command, int* isCorrectCommand);
 //Handles cases of i v w
 bool casehandler(string);
 
@@ -59,6 +59,7 @@ int main()
 
         //Running grep function
         grepfunction(str);
+		if(debug)
 		cout<<"\n";
     }
 }
@@ -69,19 +70,40 @@ void testcaserun()
 {
     vector<string> commandfull;
     vector<string>::iterator itr;
-    string command="grep line sample.txt";
+	
+	
+	
+    string command="line sample.txt";
     commandfull.push_back(command);
-    command="grep -v line sample.txt";
+	
+	command="\"line\" sample.txt";
     commandfull.push_back(command);
-    command="grep -i line sample.txt";
+	
+	command="\"line is\" sample.txt";
     commandfull.push_back(command);
-    command="grep -w line sample.txt";
+	
+	command="line is sample.txt";
     commandfull.push_back(command);
-    command= "grep -n line sample.txt";
+	
+	command="-w \"line is\" sample.txt";
     commandfull.push_back(command);
-    command="grep -iw line sample.txt";
+	
+	command="-w \" line is \" sample.txt";
     commandfull.push_back(command);
-    command="grep -i line sample.txt";
+	
+	
+	
+    command="-v line sample.txt";
+    commandfull.push_back(command);
+    command="-i line sample.txt";
+    commandfull.push_back(command);
+    command="-w line sample.txt";
+    commandfull.push_back(command);
+    command="-n line sample.txt";
+    commandfull.push_back(command);
+    command="-iw line sample.txt";
+    commandfull.push_back(command);
+    command="-i line sample.txt";
     for(itr=commandfull.begin(); itr!=commandfull.end(); itr++)
     {
         grepfunction(*itr);
@@ -94,8 +116,13 @@ void testcaserun()
 
 //Grep function
 bool grepfunction(string command)
-{
-    vector<string> commands=breakcommand(command);
+{	
+	int isCorrectCommand=1;
+    vector<string> commands=breakcommand(command,&isCorrectCommand);
+	
+	if(!isCorrectCommand)
+		return -1;
+
     vector<string>::iterator itr;
     //break command
     for(itr=commands.begin(); itr!=commands.end(); itr++)
@@ -180,9 +207,9 @@ bool isblankorextra(char a)
 }
 
 //illegal case
-void errormessage(char a)
+void errormessage(string message)
 {
-    cout<<"Illegal symbol "<<a<<"\n";
+    cout<<"Illegal symbol "<<message<<"\n";
 }
 
 //case handler
@@ -199,7 +226,7 @@ bool casehandler(string commands)
                 ignorecases=true;
             else
             {
-                errormessage('i');
+                errormessage("i");
                 return Err;
             }
             break;
@@ -209,7 +236,7 @@ bool casehandler(string commands)
                 addblankswhilecheck=true;
             else
             {
-                errormessage('w');
+                errormessage("w");
                 return Err;
             }
             break;
@@ -219,7 +246,7 @@ bool casehandler(string commands)
                 invert=true;
             else
             {
-                errormessage('v');
+                errormessage("v");
                 return Err;
             }
             break;
@@ -229,18 +256,18 @@ bool casehandler(string commands)
                 linenumprint=true;
             else
             {
-                errormessage('n');
+                errormessage("n");
                 return Err;
             }
             break;
         default:
-            errormessage(commands[i]);
+            errormessage(commands[i]+"");
         }
     }
     return true;
 }
 //breaking command into pieces
-vector<string> breakcommand(string command)
+vector<string> breakcommand(string command, int *isCorrectCommand)
 {
     int pos=0;
     vector<string>ans;
@@ -264,23 +291,36 @@ vector<string> breakcommand(string command)
         ans.push_back(specialcommand);
         //illegal error case
         if(command.find(" ")!=string::npos)
-        command.erase(0,command.find(" ")+1);
+			command.erase(0,command.find(" ")+1);
     }
-    else
-        ans.push_back("-");
+	else{
+		//- not present
+		ans.push_back("-");
+	}
 
     string file_name=command.substr(command.find_last_of(" ")+1);
-    //illegal case check
+    
+	//illegal case check
     if(command.find(" ")!=string::npos)
-    command.erase(command.find_last_of(" "));
-    ans.push_back(command);
-    if(debug)
-    {
-        cout<<" "<<specialcommand<<"*";
-        cout<<" "<<command<<"*";
-        cout<<" "<<file_name<<"*"<<"\n";
+		command.erase(command.find_last_of(" "));
+    
+	if(command[0]=='\"' && command[command.size()-1]=='\"')
+		ans.push_back(command.substr(1,command.size()-2));
+	else{
+		if(command.find(" ")!=string::npos)
+		{	errormessage(command);
+			*isCorrectCommand=0;
+		}
+		ans.push_back(command);
     }
-    ans.push_back(file_name);
+	ans.push_back(file_name);
+	if(debug)
+    {
+        cout<<" "<<ans[0]<<"*";
+        cout<<" "<<ans[1]<<"*";
+        cout<<" "<<ans[2]<<"*"<<"\n";
+    }
+    
     return ans;
 }
 

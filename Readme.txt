@@ -1,7 +1,7 @@
 1. Clone the repossitory using  "git clone https://github.com/Anandsharmak/grepincpp.git"
 2. To make executable file in linux : 
     use "g++ grep.cpp -o grep"
-3. Then use command " grep < input.txt > output.txt "
+3. Then use command " ./grep < input.txt > output.txt "
 
 	Where input. txt contains the input of format :
 	-[options] pattern filename.ext
